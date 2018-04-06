@@ -1,0 +1,8 @@
+*
+!*/
+!*.go
+!.gitignore
+!*.js
+!*.css
+!*.html
+!app.conf
