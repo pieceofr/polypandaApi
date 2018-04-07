@@ -74,13 +74,19 @@ func (c *PandaController) SetURL() {
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
-
-	addr := c.Ctx.Input.Param("addr")
+	var addr string
+	err = c.Ctx.Input.Bind(&addr, "addr")
+	if err != nil {
+		ret.statusFail("no photo address ")
+		c.Data["json"] = &ret
+		c.ServeJSON()
+	}
 	if len(addr) <= 0 {
 		ret.statusFail("no photo address ")
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
+
 	//Encode addr
 	err = models.SetURLByIndex(idx, addr)
 	if err != nil {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"polypanda/apiserver/models"
-	_ "polypanda/apiserver/routers"
+	"polypanda/polypandaApi/models"
+	_ "polypanda/polypandaApi/routers"
 
 	"github.com/astaxie/beego"
 	_ "github.com/go-sql-driver/mysql"
