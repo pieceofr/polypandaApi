@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"polypanda/apiserver/controllers"
+	"polypanda/polypandaApi/controllers"
 
 	"github.com/astaxie/beego"
 )
@@ -25,7 +25,7 @@ func init() {
 -  /panda/:owner/:ownername (PUT) Set Panda Ownername
 -  /panda/:index/photo (PUT) Assign owner's photo addr
 	param : addr = locationOfPhoto
--  /display/numPage (GET) Return number of page to return
--  /display/numPage (PUT) Return number of page to return
+-  /display/numpage (GET) Return number of page to return
+-  /display/numpage (PUT) Return number of page to return
 	param : num = {number of records in one page}
 */

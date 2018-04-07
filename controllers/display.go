@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"polypanda/apiserver/models"
+	"polypanda/polypandaApi/models"
 	"strconv"
 
 	"github.com/astaxie/beego"
