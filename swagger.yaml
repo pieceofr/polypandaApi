@@ -1,120 +1,154 @@
 swagger: '2.0'
 info:
   version: '1.0'
-  title: "polypandaAPI"
-  description: Polls is a simple API allowing consumers to view polls and vote in them.
+  title: "polypandaApi Documentation"
+  description: polypandaApi is the api documentation for polypanda api service
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: polls.apiblueprint.org
-basePath: /
+host: dev.polypanda.io
+basePath: /api/v1
 schemes:
 - http
 consumes:
 - application/json
 produces:
 - application/json
+
 paths:
-  /questions:
-    x-summary: Questions Collection
+  /panda/all:
+    x-summary: panada Collection
     get:
-      summary: List All Questions
+      summary: return all panda objects; however, the number of returns is limited to maxRecords defined in app.conf
       responses:
         200:
-          description: Successful Response
+          description: response ok
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Question'
+            $ref: '#/components/definitions/RetPanda'
           examples:
-            application/json:
-              - question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 2048
-                  - choice: Python
-                    votes: 1024
-                  - choice: Objective-C
-                    votes: 512
-                  - choice: Ruby
-                    votes: 256
-    post:
-      description: >-
-        You may create your own question using this action. It takes a JSON
-        object containing a question and a collection of answers in the
-        form of choices.
-      summary: Create a New Question
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/QuestionRequest'
-      responses:
-        201:
-          description: ''
-          schema:
-            $ref: '#/definitions/Question'
-          examples:
-            application/json:
-                question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 0
-                  - choice: Python
-                    votes: 0
-                  - choice: Objective-C
-                    votes: 0
-                  - choice: Ruby
-                    votes: 0
-definitions:
-  Question:
-    title: Question
-    type: object
-    properties:
-      question:
-        type: string
-      published_at:
-        type: string
-      choices:
-        type: array
-        items:
-          $ref: '#/definitions/Choice'
-    required:
-      - question
-      - published_at
-      - choices
-  Choice:
-    title: Choice
-    type: object
-    properties:
-      votes:
-        type: integer
-        format: int32
-      choice:
-        type: string
-    required:
-      - votes
-      - choice
-  QuestionRequest:
-    title: Question Request
-    type: object
-    properties:
-      question:
-        type: string
-      choices:
-        type: array
-        items:
+            $ref: '#/components/examples/pandaExample'
+            
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          $ref: '#/components/responses/NotFound' 
+          
+# Descriptions of common components
+components:
+  definitions:
+    RetSimple:
+      title: RetSimple
+      type: object
+      properties:
+        status:
+          type : string
+        message:
           type: string
-    required:
-      - question
-      - choices
-    example:
-      question: Favourite programming language?
-      choices:
-        - Swift
-        - Python
-        - Objective-C
-        - Ruby
+        extra:
+          type: string
+    RetPanda:
+      title: RetPanda
+      type: object
+      properties:
+        status:
+          type : string
+        message:
+          type: string
+        extra:
+          type: string
+        pandas:
+          type: array
+          items:
+            $ref: '#/components/definitions/Panda'
+      
+    Panda:
+      title: Panda
+      type: object
+      properties:
+        pandaIndex:
+          type: int
+        genes:
+          type: string
+        birthTime:
+          type: long
+        coolDown:
+          type: long 
+        rank:
+          type: int
+        motherID:
+          type: int
+        fatherID:
+          type: int
+        generation:
+          type: int
+        owner:
+          type: string
+        ownerName:
+          type: string
+        photoURL:
+          type: string
+        snapURL:
+          type: string
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    # Schema for error response body
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  examples:
+    pandaExample:
+      application/json:
+        status: "OK"
+        message: ""
+        extra: ""
+        pandas:
+          - pandaIndex: 0
+            genes: "MDhmZTQxMTRlMDlkYTkyODJjY2Q4ZjY0NDExYTRiNTI="
+            birthTime: 1523031825
+            coolDown: 1800
+            rank: 0
+            motherID: 0
+            fatherID: 0
+            generation: 0
+            owner: "NGUyODI4MGIwZTZhNDA1ZjU0MjI="
+            ownerName: "divine-frog"
+            photoURL: "localofphoto"
+            snapURL:
+          - pandaIndex: 1
+            genes: "MjQ1NjRmNzZmMjcxMGQxMDI2MWE2N2FlNTc3MGUxNzc="
+            birthTime: 1523031825
+            coolDown: 172800
+            rank: 0
+            motherID: 0
+            fatherID: 0
+            generation: 0
+            owner: "NjQyOTZlM2IyNDM0MTAyNDFlMjY="
+            ownerName: "frosty-butterfly"
+            photoURL: "localofphoto"
+            snapURL:
+  
+
+      
+     
+      
+      
