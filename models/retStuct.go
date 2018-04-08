@@ -2,35 +2,41 @@ package models
 
 import (
 	"encoding/json"
+	"strconv"
 )
 
 const (
-	statusOK    = "OK"
 	statusFail  = "Fail"
-	okMessage   = "Operation is Successful"
-	failMessage = "Operation is Fail"
+	okMessage   = "200 OK"
+	failMessage = "Operation Fail"
 )
 
 /*RetSimple for Return Message*/
 type RetSimple struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
-	Extra   string `json:"extra, omitempty"`
+	Code      StatusCode `json:"code"`
+	Message   string     `json:"message"`
+	ExtraCode int        `json:"extraCode, omitempty"`
+	Extra     string     `json:"extra, omitempty"`
 }
 
 /*StatusOK make a Successful Return Message*/
 func (r *RetSimple) StatusOK() {
-	r.Status = statusOK
+	r.Code = St200OK
 	r.Message = okMessage
 }
 
 /*StatusFail make a Successful Return Message*/
-func (r *RetSimple) StatusFail(err string) {
-	r.Status = failMessage
-	if len(err) == 0 {
-		r.Message = failMessage
-	} else {
-		r.Message = err
+func (r *RetSimple) StatusFail(code StatusCode) {
+	r.Code = code
+	r.Message = "fail code:" + strconv.Itoa(int(code))
+}
+
+/*SetStatus set status of RetPanda, extracode = 0 to omit the attribute */
+func (r *RetSimple) SetStatus(code StatusCode, msg string, extracode int) {
+	r.Code = code
+	r.Message = msg
+	if extracode != 0 {
+		r.ExtraCode = extracode
 	}
 }
 
@@ -44,35 +50,33 @@ func (r *RetSimple) GetJSONStream() []byte {
 
 /*RetPanda for Return Message*/
 type RetPanda struct {
-	Status  string  `json:"status"`
-	Message string  `json:"message"`
-	Extra   string  `json:"extra, omitempty"`
-	Pandas  []Panda `json:"pandas, omitempty"`
+	Code      StatusCode `json:"code"`
+	Message   string     `json:"message"`
+	ExtraCode int        `json:"extraCode, omitempty"`
+	Extra     string     `json:"extra, omitempty"`
+	Pandas    []Panda    `json:"pandas, omitempty"`
 }
 
 /*StatusOK make a Successful Return Message*/
 func (r *RetPanda) StatusOK(p []Panda) {
-	r.Status = statusOK
+	r.Code = St200OK
 	r.Message = okMessage
 	r.Pandas = p
 }
 
 /*StatusFail make a Successful Return Message*/
-func (r *RetPanda) StatusFail(err string) {
-	r.Status = failMessage
-	if len(err) == 0 {
-		r.Message = failMessage
-	} else {
-		r.Message = err
-	}
+func (r *RetPanda) StatusFail(code StatusCode) {
+	r.Code = code
+	r.Message = "fail code:" + strconv.Itoa(int(code))
 }
 
-/*IsOK is status equal OK*/
-func (r *RetPanda) IsOK() bool {
-	if r.Status == statusOK {
-		return true
+/*SetStatus set status of RetPanda, extracode = 0 to omit the attribute */
+func (r *RetPanda) SetStatus(code StatusCode, msg string, extracode int) {
+	r.Code = code
+	r.Message = msg
+	if extracode != 0 {
+		r.ExtraCode = extracode
 	}
-	return false
 }
 
 /*GetJSONStream convert Panda array to Json*/

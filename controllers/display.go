@@ -15,12 +15,12 @@ type DisplayController struct {
 /*Get set how number of pandas in a page*/
 func (c *DisplayController) Get() {
 	var ret models.RetSimple
-	_, err := strconv.Atoi(beego.AppConfig.String("numRecordsInPage"))
+	_, err := strconv.Atoi(beego.AppConfig.String("pagesize"))
 	if err == nil {
 		ret.StatusOK()
-		ret.Extra = beego.AppConfig.String("numRecordsInPage")
+		ret.Extra = beego.AppConfig.String("pagesize")
 	} else {
-		ret.StatusFail(err.Error())
+		ret.SetStatus(models.St409Conflict, err.Error(), 0)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
@@ -29,23 +29,23 @@ func (c *DisplayController) Get() {
 /*Put set how number of pandas in a page*/
 func (c *DisplayController) Put() {
 	var ret models.RetSimple
-	var num int
-	err := c.Ctx.Input.Bind(&num, "num")
+	num, err := c.GetInt("size")
+
 	if err != nil {
-		ret.StatusFail("")
+		ret.StatusFail(models.St400BadRequest)
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	if num <= 0 {
-		ret.StatusFail("Invalid input of  number. number must be a digit and greater than zero")
+		ret.SetStatus(models.St400BadRequest, "page size must greater than zero", 0)
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	if models.SetNumInPage(num) {
 		ret.StatusOK()
-
+		ret.Extra = beego.AppConfig.String("pagesize")
 	} else {
-		ret.StatusFail("")
+		ret.SetStatus(models.St408RequestTimeout, "page size has not changed", 0)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()

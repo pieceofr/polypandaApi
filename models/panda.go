@@ -45,13 +45,13 @@ func QueryAllPandas() ([]Panda, int, error) {
 /*QueryPandaByPage return All Pandas*/
 func QueryPandaByPage(page int) ([]Panda, int, error) {
 	SQLConnect()
-	numPage, err := beego.AppConfig.Int("numRecordsInPage")
+	pagesize, err := beego.AppConfig.Int("pagesize")
 	if err != nil {
 		return nil, 0, err
 	}
 	stm := fmt.Sprintf("SELECT * from %s WHERE pandaIndex BETWEEN ? AND ? ORDER BY %s",
 		beego.AppConfig.String("pandatable"), beego.AppConfig.String("sortcolumn"))
-	rows, err := sqldb.Query(stm, (page-1)*numPage, page*numPage-1)
+	rows, err := sqldb.Query(stm, (page-1)*pagesize, page*pagesize-1)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -87,9 +87,9 @@ func SetNameByOwner(name string, owner []byte) error {
 
 /*SetNumInPage set number of Record in one page*/
 func SetNumInPage(num int) bool {
-	beego.AppConfig.Set("numRecordsInPage", strconv.Itoa(num))
-	if beego.AppConfig.String("numRecordsInPage") == strconv.Itoa(num) {
-		log.Println("numRecordsInPage is set to ", beego.AppConfig.String("numRecordsInPage"))
+	beego.AppConfig.Set("pagesize", strconv.Itoa(num))
+	if beego.AppConfig.String("pagesize") == strconv.Itoa(num) {
+		log.Println("pagesize is set to ", beego.AppConfig.String("pagesize"))
 		return true
 	}
 	return false

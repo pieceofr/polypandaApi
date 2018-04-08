@@ -1,8 +1,20 @@
 package models
 
 import (
+	"log"
+	"regexp"
 	"strconv"
 )
+
+/*IsValidOwnername check is name the valid ownername in which every single byte is a character */
+func IsValidOwnername(name string) bool {
+	r, err := regexp.Compile(`\w+`)
+	if err != nil {
+		log.Println("[Error]ValidOwnername err:", name)
+		return false
+	}
+	return r.MatchString(name)
+}
 
 /*ConvertPageNum convert input string to number and if it is a a valid num, return -1*/
 func ConvertPageNum(input string) int {
