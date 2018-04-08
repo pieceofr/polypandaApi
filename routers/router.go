@@ -9,8 +9,7 @@ import (
 func init() {
 	beego.Router("/", &controllers.MainController{})
 	//panda Controller
-	beego.Router("/api/v1/panda/all", &controllers.PandaController{}, "get:GetPandas")
-	beego.Router("/api/v1/panda/page", &controllers.PandaController{}, "get:GetByPage")
+	beego.Router("/api/v1/panda", &controllers.PandaController{})
 	beego.Router("/api/v1/panda/:owner/:ownername([\\w-]+)", &controllers.PandaController{}, "put:SetName")
 	beego.Router("/api/v1/panda/:index/photo", &controllers.PandaController{}, "put:SetURL")
 	//Display Controller

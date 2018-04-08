@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/base64"
+	"log"
 	"polypanda/polypandaApi/models"
 	"strconv"
 
@@ -13,8 +14,19 @@ type PandaController struct {
 	beego.Controller
 }
 
-/*GetPandas return an array of panda in JSON*/
-func (c *PandaController) GetPandas() {
+/*Get return an list of panda in JSON*/
+func (c *PandaController) Get() {
+	//pageSize := models.ConvertPageNum(c.GetString("pageSize"))
+	pageNum := models.ConvertPageNum(c.GetString("pageNum"))
+	log.Println("pageNum:", pageNum)
+	if pageNum < 0 {
+		respPandaAll(c)
+	}
+	//query by page
+	respPandaByPage(c, pageNum)
+}
+
+func respPandaAll(c *PandaController) {
 	var ret RetPanda
 	pandas, _, err := models.QueryAllPandas()
 	if err != nil {
@@ -22,14 +34,12 @@ func (c *PandaController) GetPandas() {
 	} else {
 		ret.statusOK(pandas)
 	}
-	c.Ctx.Output.Body(ret.getJSONStream())
+	c.Data["json"] = &ret
+	c.ServeJSON()
 }
 
-/*GetByPage return an array of panda in JSON*/
-func (c *PandaController) GetByPage() {
+func respPandaByPage(c *PandaController, num int) {
 	var ret RetPanda
-	var num int
-	c.Ctx.Input.Bind(&num, "num")
 	if num < 1 {
 		num = 1
 	}
@@ -40,7 +50,8 @@ func (c *PandaController) GetByPage() {
 		ret.statusOK(pandas)
 		ret.Extra = strconv.Itoa(num)
 	}
-	c.Ctx.Output.Body(ret.getJSONStream())
+	c.Data["json"] = &ret
+	c.ServeJSON()
 }
 
 /*SetName return an array of panda by page in JSON*/
