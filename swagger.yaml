@@ -18,9 +18,9 @@ produces:
 
 paths:
   /panda:
-    x-summary: panada Collection
+    x-summary: Panda list
     get:
-      summary: return panda objects
+      summary: get list of pandas
       parameters:
         - name: pageNum
           in: query
@@ -29,43 +29,183 @@ paths:
       responses:
         200:
           description: response ok
+          schema:
+            $ref: '#/definitions/RetPanda'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
         401:
           $ref: '#/responses/Unauthorized'
         404:
           $ref: '#/responses/NotFound'
+
+  /panda/{owner}/ownername:
+    x-summary: ownername of owner
+    put:
+      summary: update ownername of a specific owner
+      produces:
+        - application/json
+      parameters:
+        - name: owner
+          in: path
+          description: owner address
+          type: string
+          required: true
+        - name: name
+          in: query
+          description: new name for owner
+          type: string
+          required: true
+      responses:
+        200:
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetSimple'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+  /panda/{index}/photo:
+    x-summary: panda photo address
+    put:
+      summary: update photo address of a panda
+      parameters:
+        - name: index
+          in: path
+          description: index of a panda
+          type: integer
+          required: true
+        - name: addr
+          in: query
+          description: photo address to be assigned to the panda
+          type: string
+          required: true
+      responses:
+        200:
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetSimple'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+  /display/pagesize:
+    x-summary: page size
+    get: 
+      summary: get page size
+      responses:
+        200: 
+          description: response ok. page size is store in extra attribute
+          schema:
+            type: object
+            properties:
+              code:
+                type : integer
+              message:
+                type: string
+              extra:
+                type: string
+              extraCode:
+                type: integer
+            required:
+              - code
+              - message
+              - extra
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+    put:
+      summary: set page size
+      parameters:
+        - name: size
+          in: query
+          description: number of pandas in a page
+          type: integer
+          required: true
+      responses:
+        200:
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetSimple'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+             
 
 definitions:
   RetSimple:
     title: RetSimple
     type: object
     properties:
-      status:
-        type : string
+      code:
+        type : integer
       message:
         type: string
       extra:
         type: string
+      extraCode:
+        type: integer
+    required:
+      - code
+      - message
+    example:
+      code: 404
+      message: "fail code 404"
+      extra: 
+      extraCode: 0
   RetPanda:
     title: RetPanda
     type: object
     properties:
-      status:
-        type : string
+      code:
+        type : integer
       message:
         type: string
       extra:
         type: string
+      extraCode:
+        type: integer
       pandas:
         type: array
         items:
           $ref: '#/definitions/Panda'
     required:
-      - status
+      - code
       - message
     example:
-      status: "OK"
-      message: ""
+      code: 200
+      message: "200 OK"
       extra: ""
+      extraCode: 0
       pandas:
         - pandaIndex: 0
           genes: "MDhmZTQxMTRlMDlkYTkyODJjY2Q4ZjY0NDExYTRiNTI="
@@ -137,6 +277,10 @@ definitions:
   
  # Descriptions of common responses
 responses:
+  BadRequest:
+    description: User request is invalid
+    schema:
+      $ref: "#/definitions/RetSimple"
   NotFound:
     description: The specified resource was not found
     schema:
