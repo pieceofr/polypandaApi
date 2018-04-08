@@ -1,120 +1,147 @@
 swagger: '2.0'
 info:
-  version: '1.0'
-  title: "polypandaAPI"
-  description: Polls is a simple API allowing consumers to view polls and vote in them.
+  version: "1"
+  title: "polypandaApi Documentation"
+  description: polypandaApi is the api documentation for polypanda api service
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: polls.apiblueprint.org
-basePath: /
+host: "dev.polypanda.io:8080"
+basePath: /api/v1
 schemes:
-- http
+ - http
+
 consumes:
 - application/json
 produces:
 - application/json
+
 paths:
-  /questions:
-    x-summary: Questions Collection
+  /panda:
+    x-summary: panada Collection
     get:
-      summary: List All Questions
+      summary: return panda objects
+      parameters:
+        - name: pageNum
+          in: query
+          description: page of pandas to return
+          type: integer
       responses:
         200:
-          description: Successful Response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Question'
-          examples:
-            application/json:
-              - question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 2048
-                  - choice: Python
-                    votes: 1024
-                  - choice: Objective-C
-                    votes: 512
-                  - choice: Ruby
-                    votes: 256
-    post:
-      description: >-
-        You may create your own question using this action. It takes a JSON
-        object containing a question and a collection of answers in the
-        form of choices.
-      summary: Create a New Question
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/QuestionRequest'
-      responses:
-        201:
-          description: ''
-          schema:
-            $ref: '#/definitions/Question'
-          examples:
-            application/json:
-                question: Favourite programming language?
-                published_at: '2015-08-05T08:40:51.620Z'
-                choices:
-                  - choice: Swift
-                    votes: 0
-                  - choice: Python
-                    votes: 0
-                  - choice: Objective-C
-                    votes: 0
-                  - choice: Ruby
-                    votes: 0
+          description: response ok
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+
 definitions:
-  Question:
-    title: Question
+  RetSimple:
+    title: RetSimple
     type: object
     properties:
-      question:
+      status:
+        type : string
+      message:
         type: string
-      published_at:
+      extra:
         type: string
-      choices:
+  RetPanda:
+    title: RetPanda
+    type: object
+    properties:
+      status:
+        type : string
+      message:
+        type: string
+      extra:
+        type: string
+      pandas:
         type: array
         items:
-          $ref: '#/definitions/Choice'
+          $ref: '#/definitions/Panda'
     required:
-      - question
-      - published_at
-      - choices
-  Choice:
-    title: Choice
-    type: object
-    properties:
-      votes:
-        type: integer
-        format: int32
-      choice:
-        type: string
-    required:
-      - votes
-      - choice
-  QuestionRequest:
-    title: Question Request
-    type: object
-    properties:
-      question:
-        type: string
-      choices:
-        type: array
-        items:
-          type: string
-    required:
-      - question
-      - choices
+      - status
+      - message
     example:
-      question: Favourite programming language?
-      choices:
-        - Swift
-        - Python
-        - Objective-C
-        - Ruby
+      status: "OK"
+      message: ""
+      extra: ""
+      pandas:
+        - pandaIndex: 0
+          genes: "MDhmZTQxMTRlMDlkYTkyODJjY2Q4ZjY0NDExYTRiNTI="
+          birthTime: 1523031825
+          coolDown: 1800
+          rank: 0
+          motherID: 0
+          fatherID: 0
+          generation: 0
+          owner: "NGUyODI4MGIwZTZhNDA1ZjU0MjI="
+          ownerName: "divine-frog"
+          photoURL: "localofphoto"
+          snapURL:
+        - pandaIndex: 1
+          genes: "MjQ1NjRmNzZmMjcxMGQxMDI2MWE2N2FlNTc3MGUxNzc="
+          birthTime: 1523031825
+          coolDown: 172800
+          rank: 0
+          motherID: 0
+          fatherID: 0
+          generation: 0
+          owner: "NjQyOTZlM2IyNDM0MTAyNDFlMjY="
+          ownerName: "frosty-butterfly"
+          photoURL: "localofphoto"
+          snapURL:
+    
+  Panda:
+    title: Panda
+    type: object
+    properties:
+      pandaIndex:
+        type: integer
+      genes:
+        type: string
+      birthTime:
+        type: integer
+      coolDown:
+        type: integer 
+      rank:
+        type: integer
+      motherID:
+        type: integer
+      fatherID:
+        type: integer
+      generation:
+        type: integer
+      owner:
+        type: string
+      ownerName:
+        type: string
+      photoURL:
+        type: string
+      snapURL:
+        type: string
+    example:
+      pandaIndex: 0
+      genes: "MDhmZTQxMTRlMDlkYTkyODJjY2Q4ZjY0NDExYTRiNTI="
+      birthTime: 1523031825
+      coolDown: 1800
+      rank: 0
+      motherID: 0
+      fatherID: 0
+      generation: 0
+      owner: "NGUyODI4MGIwZTZhNDA1ZjU0MjI="
+      ownerName: "divine-frog"
+      photoURL: "localofphoto"
+      snapURL:
+    
+  
+ # Descriptions of common responses
+responses:
+  NotFound:
+    description: The specified resource was not found
+    schema:
+      $ref: "#/definitions/RetSimple"
+  Unauthorized:
+    description: Unauthorized
+    schema:
+      $ref: "#/definitions/RetSimple"
