@@ -14,13 +14,13 @@ type DisplayController struct {
 
 /*Get set how number of pandas in a page*/
 func (c *DisplayController) Get() {
-	var ret RetSimple
+	var ret models.RetSimple
 	_, err := strconv.Atoi(beego.AppConfig.String("numRecordsInPage"))
 	if err == nil {
-		ret.statusOK()
+		ret.StatusOK()
 		ret.Extra = beego.AppConfig.String("numRecordsInPage")
 	} else {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
@@ -28,24 +28,24 @@ func (c *DisplayController) Get() {
 
 /*Put set how number of pandas in a page*/
 func (c *DisplayController) Put() {
-	var ret RetSimple
+	var ret models.RetSimple
 	var num int
 	err := c.Ctx.Input.Bind(&num, "num")
 	if err != nil {
-		ret.statusFail("")
+		ret.StatusFail("")
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	if num <= 0 {
-		ret.statusFail("Invalid input of  number. number must be a digit and greater than zero")
+		ret.StatusFail("Invalid input of  number. number must be a digit and greater than zero")
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	if models.SetNumInPage(num) {
-		ret.statusOK()
+		ret.StatusOK()
 
 	} else {
-		ret.statusFail("")
+		ret.StatusFail("")
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()

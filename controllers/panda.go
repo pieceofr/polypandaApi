@@ -27,27 +27,27 @@ func (c *PandaController) Get() {
 }
 
 func respPandaAll(c *PandaController) {
-	var ret RetPanda
+	var ret models.RetPanda
 	pandas, _, err := models.QueryAllPandas()
 	if err != nil {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 	} else {
-		ret.statusOK(pandas)
+		ret.StatusOK(pandas)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
 }
 
 func respPandaByPage(c *PandaController, num int) {
-	var ret RetPanda
+	var ret models.RetPanda
 	if num < 1 {
 		num = 1
 	}
 	pandas, _, err := models.QueryPandaByPage(num)
 	if err != nil {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 	} else {
-		ret.statusOK(pandas)
+		ret.StatusOK(pandas)
 		ret.Extra = strconv.Itoa(num)
 	}
 	c.Data["json"] = &ret
@@ -56,44 +56,44 @@ func respPandaByPage(c *PandaController, num int) {
 
 /*SetName return an array of panda by page in JSON*/
 func (c *PandaController) SetName() {
-	var ret RetSimple
+	var ret models.RetSimple
 	owner := c.Ctx.Input.Param(":owner")
 	name := c.Ctx.Input.Param(":ownername")
 	decoded, err := base64.StdEncoding.DecodeString(owner)
 	if err != nil {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	err = models.SetNameByOwner(name, decoded)
 	if err != nil {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
-	ret.statusOK()
+	ret.StatusOK()
 	c.Data["json"] = &ret
 	c.ServeJSON()
 }
 
 /*SetURL return an array of panda by page in JSON*/
 func (c *PandaController) SetURL() {
-	var ret RetSimple
+	var ret models.RetSimple
 	idx, err := c.GetInt(":index")
 	if err != nil {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	var addr string
 	err = c.Ctx.Input.Bind(&addr, "addr")
 	if err != nil {
-		ret.statusFail("no photo address ")
+		ret.StatusFail("no photo address ")
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
 	if len(addr) <= 0 {
-		ret.statusFail("no photo address ")
+		ret.StatusFail("no photo address ")
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
@@ -101,11 +101,11 @@ func (c *PandaController) SetURL() {
 	//Encode addr
 	err = models.SetURLByIndex(idx, addr)
 	if err != nil {
-		ret.statusFail(err.Error())
+		ret.StatusFail(err.Error())
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
-	ret.statusOK()
+	ret.StatusOK()
 	c.Data["json"] = &ret
 	c.ServeJSON()
 }

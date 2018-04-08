@@ -1,8 +1,7 @@
-package controllers
+package models
 
 import (
 	"encoding/json"
-	"polypanda/polypandaApi/models"
 )
 
 const (
@@ -12,13 +11,6 @@ const (
 	failMessage = "Operation is Fail"
 )
 
-/*RetJSON the type that support Json Format*/
-type RetJSON interface {
-	statusOK()
-	statusFail(err string)
-	getJSONStream()
-}
-
 /*RetSimple for Return Message*/
 type RetSimple struct {
 	Status  string `json:"status"`
@@ -27,13 +19,13 @@ type RetSimple struct {
 }
 
 /*StatusOK make a Successful Return Message*/
-func (r *RetSimple) statusOK() {
+func (r *RetSimple) StatusOK() {
 	r.Status = statusOK
 	r.Message = okMessage
 }
 
 /*StatusFail make a Successful Return Message*/
-func (r *RetSimple) statusFail(err string) {
+func (r *RetSimple) StatusFail(err string) {
 	r.Status = failMessage
 	if len(err) == 0 {
 		r.Message = failMessage
@@ -42,8 +34,8 @@ func (r *RetSimple) statusFail(err string) {
 	}
 }
 
-/*PandgetJSONStream convert Panda array to Json*/
-func (r *RetSimple) getJSONStream() []byte {
+/*GetJSONStream convert Panda array to Json*/
+func (r *RetSimple) GetJSONStream() []byte {
 	if jsonData, err := json.Marshal(r); err == nil {
 		return jsonData
 	}
@@ -52,21 +44,21 @@ func (r *RetSimple) getJSONStream() []byte {
 
 /*RetPanda for Return Message*/
 type RetPanda struct {
-	Status  string         `json:"status"`
-	Message string         `json:"message"`
-	Extra   string         `json:"extra, omitempty"`
-	Pandas  []models.Panda `json:"pandas, omitempty"`
+	Status  string  `json:"status"`
+	Message string  `json:"message"`
+	Extra   string  `json:"extra, omitempty"`
+	Pandas  []Panda `json:"pandas, omitempty"`
 }
 
 /*StatusOK make a Successful Return Message*/
-func (r *RetPanda) statusOK(p []models.Panda) {
+func (r *RetPanda) StatusOK(p []Panda) {
 	r.Status = statusOK
 	r.Message = okMessage
 	r.Pandas = p
 }
 
 /*StatusFail make a Successful Return Message*/
-func (r *RetPanda) statusFail(err string) {
+func (r *RetPanda) StatusFail(err string) {
 	r.Status = failMessage
 	if len(err) == 0 {
 		r.Message = failMessage
@@ -75,15 +67,16 @@ func (r *RetPanda) statusFail(err string) {
 	}
 }
 
-func (r *RetPanda) isOK() bool {
+/*IsOK is status equal OK*/
+func (r *RetPanda) IsOK() bool {
 	if r.Status == statusOK {
 		return true
 	}
 	return false
 }
 
-/*PandgetJSONStream convert Panda array to Json*/
-func (r *RetPanda) getJSONStream() []byte {
+/*GetJSONStream convert Panda array to Json*/
+func (r *RetPanda) GetJSONStream() []byte {
 	if jsonData, err := json.Marshal(r); err == nil {
 		return jsonData
 	}
