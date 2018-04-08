@@ -8,3 +8,4 @@
 !app.conf
 !*.md
 |*.tpl
+|*.yaml
