@@ -1,13 +1,19 @@
 swagger: '2.0'
 info:
   version: "1"
-  title: "polypandaApi Documentation"
-  description: polypandaApi is the api documentation for polypanda api service
+  title: "Polypanda APIs"
+  description: API Documentation for project Piolypanda。Polypanda is a blockchain game project。  
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
 host: "dev.polypanda.io:8080"
 basePath: /api/v1
+tags:
+- name: "Panda"
+  description: Anything to do with panda table
+- name: "Display"
+  description: Configuration for displaying data
+  
 schemes:
  - http
 
@@ -18,9 +24,13 @@ produces:
 
 paths:
   /panda:
-    x-summary: Panda list
+    x-summary: Panda List
     get:
-      summary: get list of pandas
+      tags: 
+      - "Panda"
+      summary: Get a list of pandas
+      description: The query will be return a list of Panda Objects。 However, if Panda objects exceeds maxRecords defined in app.conf. It only return maxRecord Pandas。\
+        It is better to use page parameter to get Panda list。
       parameters:
         - name: pageNum
           in: query
@@ -43,9 +53,12 @@ paths:
           $ref: '#/responses/NotFound'
 
   /panda/{owner}/ownername:
-    x-summary: ownername of owner
+    x-summary: Update Ownername
     put:
-      summary: update ownername of a specific owner
+      tags: 
+      - "Panda"
+      summary: Update a specific owner's ownername
+      description: owner is a base64 encoded string. This API find all pandas with the same specified owner and change all ownername
       produces:
         - application/json
       parameters:
@@ -75,9 +88,12 @@ paths:
         404:
           $ref: '#/responses/NotFound'
   /panda/{index}/photo:
-    x-summary: panda photo address
+    x-summary: Panda Photo Address
     put:
-      summary: update photo address of a panda
+      tags: 
+      - "Panda"
+      summary: Update photo address of a panda
+      description: This API updates the photo address of the panda having the index provided
       parameters:
         - name: index
           in: path
@@ -105,9 +121,12 @@ paths:
         404:
           $ref: '#/responses/NotFound'
   /display/pagesize:
-    x-summary: page size
+    x-summary: Page Size
     get: 
-      summary: get page size
+      tags: 
+      - "Display"
+      summary: Get page size
+      description: Page size is used to determine how many objects in a page to return if the method can be return by page
       responses:
         200: 
           description: response ok. page size is store in extra attribute
@@ -137,7 +156,10 @@ paths:
         404:
           $ref: '#/responses/NotFound'
     put:
-      summary: set page size
+      tags: 
+      - "Display"
+      summary: Set page size
+      description: set the page size.If it does not be set, system will use "pagesize" defined in the app.conf file。
       parameters:
         - name: size
           in: query
