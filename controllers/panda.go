@@ -25,11 +25,12 @@ func (c *PandaController) Get() {
 
 func respPandaAll(c *PandaController) {
 	var ret models.RetPanda
-	pandas, _, err := models.QueryAllPandas()
+	pandas, cnt, err := models.QueryAllPandas()
 	if err != nil {
 		ret.SetStatus(models.St404NotFound, err.Error(), 0)
 	} else {
 		ret.StatusOK(pandas)
+		ret.Value = strconv.Itoa(cnt)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
@@ -40,12 +41,12 @@ func respPandaByPage(c *PandaController, num int) {
 	if num < 1 {
 		num = 1
 	}
-	pandas, numOfrecords, err := models.QueryPandaByPage(num)
+	pandas, cnt, err := models.QueryPandaByPage(num)
 	if err != nil {
 		ret.SetStatus(models.St404NotFound, err.Error(), 0)
 	} else {
 		ret.StatusOK(pandas)
-		ret.Value = strconv.Itoa(numOfrecords)
+		ret.Value = strconv.Itoa(cnt)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
