@@ -79,7 +79,8 @@ func (c *PandaController) Count() {
 	if err != nil {
 		ret.SetStatus(models.St404NotFound, err.Error(), 0)
 	} else {
-		ret.StatusOK()		ret.Value = strconv.Itoa(count)
+		ret.StatusOK()
+		ret.Value = strconv.Itoa(count)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
