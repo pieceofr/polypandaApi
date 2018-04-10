@@ -10,6 +10,8 @@ func init() {
 	beego.Router("/", &controllers.MainController{})
 	//panda Controller
 	beego.Router("/api/v1/panda", &controllers.PandaController{})
+	beego.Router("/api/v1/panda/:index", &controllers.PandaController{}, "get:GetPandaByIndex")
+	beego.Router("/api/v1/panda/count", &controllers.PandaController{}, "get:Count")
 	beego.Router("/api/v1/panda/:owner/ownername", &controllers.PandaController{}, "put:SetName")
 	beego.Router("/api/v1/panda/:index/photo", &controllers.PandaController{}, "put:SetURL")
 	//Display Controller

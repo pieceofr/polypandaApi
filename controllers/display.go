@@ -18,7 +18,7 @@ func (c *DisplayController) Get() {
 	_, err := strconv.Atoi(beego.AppConfig.String("pagesize"))
 	if err == nil {
 		ret.StatusOK()
-		ret.Extra = beego.AppConfig.String("pagesize")
+		ret.Value = beego.AppConfig.String("pagesize")
 	} else {
 		ret.SetStatus(models.St409Conflict, err.Error(), 0)
 	}
@@ -43,7 +43,7 @@ func (c *DisplayController) Put() {
 	}
 	if models.SetNumInPage(num) {
 		ret.StatusOK()
-		ret.Extra = beego.AppConfig.String("pagesize")
+		ret.Value = beego.AppConfig.String("pagesize")
 	} else {
 		ret.SetStatus(models.St408RequestTimeout, "page size has not changed", 0)
 	}

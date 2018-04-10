@@ -74,6 +74,47 @@ func QueryPandaByPage(page int) ([]Panda, int, error) {
 	return pandas, num, nil
 }
 
+/*QueryPandaByIndex return All Pandas*/
+func QueryPandaByIndex(idx int) ([]Panda, int, error) {
+	SQLConnect()
+
+	stm := fmt.Sprintf("SELECT * from %s WHERE pandaIndex=?", beego.AppConfig.String("pandatable"))
+	rows, err := sqldb.Query(stm, idx)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+	pandas := make([]Panda, 0)
+	num := 0
+	for num = 0; rows.Next(); num++ {
+		panda := Panda{}
+		err := rows.Scan(&panda.PandaIndex, &panda.Genes, &panda.Birthtime, &panda.Cooldown, &panda.Rank, &panda.MotherID,
+			&panda.FatherID, &panda.Generation, &panda.Owner, &panda.Ownername, &panda.Photourl, &panda.Snapurl)
+		if err != nil {
+			log.Fatal(err)
+			return nil, 0, err
+		}
+		pandas = append(pandas, panda)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, 0, err
+	}
+	return pandas, num, nil
+}
+
+/*QueryRowCount query number of rows in a table*/
+func QueryRowCount(table string) (int, error) {
+	SQLConnect()
+	var count int
+	log.Println(table)
+	row := sqldb.QueryRow(fmt.Sprintf("SELECT COUNT(*) FROM %s", table))
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 /*SetNameByOwner set the new name for the owner*/
 func SetNameByOwner(name string, owner []byte) error {
 	SQLConnect()

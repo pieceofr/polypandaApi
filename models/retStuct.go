@@ -16,7 +16,7 @@ type RetSimple struct {
 	Code      StatusCode `json:"code"`
 	Message   string     `json:"message"`
 	ExtraCode int        `json:"extraCode, omitempty"`
-	Extra     string     `json:"extra, omitempty"`
+	Value     string     `json:"value, omitempty"`
 }
 
 /*StatusOK make a Successful Return Message*/
@@ -53,7 +53,7 @@ type RetPanda struct {
 	Code      StatusCode `json:"code"`
 	Message   string     `json:"message"`
 	ExtraCode int        `json:"extraCode, omitempty"`
-	Extra     string     `json:"extra, omitempty"`
+	Value     string     `json:"value, omitempty"`
 	Pandas    []Panda    `json:"pandas, omitempty"`
 }
 

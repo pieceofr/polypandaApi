@@ -16,17 +16,17 @@ func IsValidOwnername(name string) bool {
 	return r.MatchString(name)
 }
 
-/*ConvertPageNum convert input string to number and if it is a a valid num, return -1*/
-func ConvertPageNum(input string) int {
+/*ConvtNumGRTZero convert to integer if it is greater than zero */
+func ConvtNumGRTZero(input string) int {
 	num, err := strconv.Atoi(input)
-	if err != nil {
+	if err != nil || num == 0 {
 		return -1
 	}
 	return num
 }
 
-/*IsValidPageSize convert input string to number and if it is a a valid num, return -1*/
-func IsValidPageSize(input string) int {
+/*ConvtNumGRTEqZero convert to integer if number greater or equall to zero*/
+func ConvtNumGRTEqZero(input string) int {
 	num, err := strconv.Atoi(input)
 	if err != nil {
 		return -1
