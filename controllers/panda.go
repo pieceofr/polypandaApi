@@ -54,7 +54,7 @@ func respPandaByPage(c *PandaController, num int) {
 /*GetPandaByIndex Controller for get panda by id*/
 func (c *PandaController) GetPandaByIndex() {
 	var ret models.RetPanda
-	idx := models.ConvtNumGRTEqZero(c.Ctx.Input.Param(":index"))
+	idx := models.ConvtNumGRTEqZero(c.Ctx.Input.Param(":idx"))
 	if idx < 0 {
 		ret.StatusFail(models.St400BadRequest)
 		c.Data["json"] = &ret
@@ -79,8 +79,7 @@ func (c *PandaController) Count() {
 	if err != nil {
 		ret.SetStatus(models.St404NotFound, err.Error(), 0)
 	} else {
-		ret.StatusOK()
-		ret.Value = strconv.Itoa(count)
+		ret.StatusOK()		ret.Value = strconv.Itoa(count)
 	}
 	c.Data["json"] = &ret
 	c.ServeJSON()
@@ -117,7 +116,7 @@ func (c *PandaController) SetName() {
 /*SetURL return an array of panda by page in JSON*/
 func (c *PandaController) SetURL() {
 	var ret models.RetSimple
-	idx, err := c.GetInt(":index")
+	idx, err := c.GetInt(":idx")
 	if err != nil {
 		ret.SetStatus(models.St400BadRequest, err.Error(), 0)
 		c.Data["json"] = &ret
