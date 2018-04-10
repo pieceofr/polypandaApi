@@ -63,6 +63,9 @@ func (c *PandaController) GetPandaByIndex() {
 	pandas, num, err := models.QueryPandaByIndex(idx)
 	if err != nil {
 		ret.SetStatus(models.St404NotFound, err.Error(), 0)
+	} else if num == 0 {
+		ret.StatusFail(models.St400BadRequest)
+		ret.Value = strconv.Itoa(num)
 	} else {
 		ret.StatusOK(pandas)
 		ret.Value = strconv.Itoa(num)
