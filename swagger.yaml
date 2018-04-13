@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: "dev.polypanda.io:8080"
+host: "dev.polypanda.io:10443"
 basePath: /api/v1
 tags:
 - name: "General"
@@ -17,7 +17,7 @@ tags:
   description: Configuration for displaying data
   
 schemes:
- - http
+ - https
 
 consumes:
 - application/json
