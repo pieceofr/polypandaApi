@@ -31,7 +31,8 @@ paths:
       tags:
       - "General"
       summary: Return Instance Status
-      description: Return instance status. This is mainly for keep-alive response message
+      description: Return instance status. This is mainly for keep-alive response message. 
+        Git last commit short hash in master will also be stored in Value field.
       responses:
         200:
           description: response ok
