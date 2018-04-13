@@ -8,6 +8,7 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.MainController{})
+	beego.Router("/status", &controllers.MainController{}, "get:GetStatus")
 	//panda Controller
 	beego.Router("/api/v1/panda", &controllers.PandaController{})
 	beego.Router("/api/v1/panda/:idx", &controllers.PandaController{}, "get:GetPandaByIndex")
