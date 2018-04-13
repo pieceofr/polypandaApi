@@ -9,6 +9,8 @@ info:
 host: "dev.polypanda.io:8080"
 basePath: /api/v1
 tags:
+- name: "General"
+  description: General operations that not related to Data
 - name: "Panda"
   description: Anything to do with panda table
 - name: "Display"
@@ -23,18 +25,34 @@ produces:
 - application/json
 
 paths:
+  /status:
+    x-summary: Status
+    get:
+      tags:
+      - "General"
+      summary: Return Instance Status
+      description: Return instance status. This is mainly for keep-alive response message
+      responses:
+        200:
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetSimple'
+    
   /panda:
     x-summary: Panda List
     get:
       tags: 
       - "Panda"
       summary: Get a list of pandas
-      description: The query will be return a list of Panda Objects。 However, if Panda objects exceeds maxRecords defined in app.conf. It only return maxRecord Pandas。\
-        It is better to use page parameter to get Panda list。
+      description: The query will be return a list of Panda Objects。 
+          You also can get panda list by pages by using pageNum. The count of returned Panda list is saved in Value field.
+          However, if Panda objects exceeds maxRecords defined in app.conf. It only return maxRecord Pandas.
+        It is better to use page parameter to get Panda list。 
+        
       parameters:
         - name: pageNum
           in: query
-          description: page of pandas to return
+          description: page of Pandas to return
           type: integer
       responses:
         200:
@@ -51,14 +69,69 @@ paths:
           $ref: '#/responses/Unauthorized'
         404:
           $ref: '#/responses/NotFound'
-
+          
+  /panda/{idx}:
+    x-summary: Get Panda by Index
+    get:
+      tags:
+      - "Panda"
+      summary: Get a panda by its index
+      description: Get Panda by its index. 
+      produces:
+        - application/json
+      parameters:
+        - name: idx
+          in: path
+          description: Panda index
+          type: integer
+          required: true
+      responses:
+        200: 
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetPanda'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+  /panda/count:
+    x-summary: Count of Total Pandas
+    get:
+      tags:
+      - "Panda"
+      summary: Return count of total Pandas
+      description: Return total Pandas in database. Count is saved in Value field
+      produces:
+        - application/json
+      responses:
+        200: 
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetSimple'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
+          
   /panda/{owner}/ownername:
     x-summary: Update Ownername
     put:
       tags: 
       - "Panda"
       summary: Update a specific owner's ownername
-      description: owner is a base64 encoded string. This API find all pandas with the same specified owner and change all ownername
+      description: Owner is a base64 encoded string. This API find all Pandas with the same specified owner and change all ownername
       produces:
         - application/json
       parameters:
@@ -87,15 +160,15 @@ paths:
           $ref: '#/responses/Unauthorized'
         404:
           $ref: '#/responses/NotFound'
-  /panda/{index}/photo:
-    x-summary: Panda Photo Address
+  /panda/{idx}/photo:
+    x-summary: Update Panda Photo Address
     put:
       tags: 
       - "Panda"
-      summary: Update photo address of a panda
+      summary: Update the photo address of a panda
       description: This API updates the photo address of the panda having the index provided
       parameters:
-        - name: index
+        - name: idx
           in: path
           description: index of a panda
           type: integer
@@ -137,14 +210,14 @@ paths:
                 type : integer
               message:
                 type: string
-              extra:
+              value:
                 type: string
               extraCode:
                 type: integer
             required:
               - code
               - message
-              - extra
+              - value
         202:
           description: Request is accepted but not gurantee to be executed
           schema:
@@ -159,7 +232,7 @@ paths:
       tags: 
       - "Display"
       summary: Set page size
-      description: set the page size.If it does not be set, system will use "pagesize" defined in the app.conf file。
+      description: Set the page size. If it does not be set, system will use "pagesize" defined in the app.conf file。
       parameters:
         - name: size
           in: query
@@ -192,7 +265,7 @@ definitions:
         type : integer
       message:
         type: string
-      extra:
+      value:
         type: string
       extraCode:
         type: integer
@@ -202,7 +275,7 @@ definitions:
     example:
       code: 404
       message: "fail code 404"
-      extra: 
+      value: 
       extraCode: 0
   RetPanda:
     title: RetPanda
@@ -212,7 +285,7 @@ definitions:
         type : integer
       message:
         type: string
-      extra:
+      value:
         type: string
       extraCode:
         type: integer
@@ -226,7 +299,7 @@ definitions:
     example:
       code: 200
       message: "200 OK"
-      extra: ""
+      value: ""
       extraCode: 0
       pandas:
         - pandaIndex: 0
