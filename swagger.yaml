@@ -195,6 +195,39 @@ paths:
           $ref: '#/responses/Unauthorized'
         404:
           $ref: '#/responses/NotFound'
+  /panda/{idx}/snap:
+    x-summary: Update Panda Photo Address
+    put:
+      tags: 
+      - "Panda"
+      summary: Update the snap shot address of a panda
+      description: This API updates the snapshot address of the panda having the index provided
+      parameters:
+        - name: idx
+          in: path
+          description: index of a panda
+          type: integer
+          required: true
+        - name: addr
+          in: query
+          description: photo address to be assigned to the panda
+          type: string
+          required: true
+      responses:
+        200:
+          description: response ok
+          schema:
+            $ref: '#/definitions/RetSimple'
+        202:
+          description: Request is accepted but not gurantee to be executed
+          schema:
+            $ref: '#/definitions/RetSimple'
+        400:
+          $ref: '#/responses/BadRequest'
+        401:
+          $ref: '#/responses/Unauthorized'
+        404:
+          $ref: '#/responses/NotFound'
   /display/pagesize:
     x-summary: Page Size
     get: 
