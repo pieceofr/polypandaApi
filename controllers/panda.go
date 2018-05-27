@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/base64"
+	"log"
 	"polypanda/polypandaApi/models"
 	"strconv"
 
@@ -118,10 +119,12 @@ func (c *PandaController) SetName() {
 	c.ServeJSON()
 }
 
-/*SetURL return an array of panda by page in JSON*/
+/*SetURL set photo URL of a specific index*/
 func (c *PandaController) SetURL() {
 	var ret models.RetSimple
-	idx, err := c.GetInt(":idx")
+	idxStr := c.Ctx.Input.Param(":idx")
+	idx, err := strconv.Atoi(idxStr)
+
 	if err != nil {
 		ret.SetStatus(models.St400BadRequest, err.Error(), 0)
 		c.Data["json"] = &ret
@@ -139,9 +142,46 @@ func (c *PandaController) SetURL() {
 		c.Data["json"] = &ret
 		c.ServeJSON()
 	}
-
+	log.Println("SetURL idx", idx)
 	//Encode addr
 	err = models.SetURLByIndex(idx, addr)
+	if err != nil {
+		ret.SetStatus(models.St409Conflict, err.Error(), 0)
+		c.Data["json"] = &ret
+		c.ServeJSON()
+	}
+	ret.StatusOK()
+	c.Data["json"] = &ret
+	c.ServeJSON()
+}
+
+/*SetSnapURL set snap URL of a specific index*/
+func (c *PandaController) SetSnapURL() {
+	var ret models.RetSimple
+	idxStr := c.Ctx.Input.Param(":idx")
+	idx, err := strconv.Atoi(idxStr)
+
+	if err != nil {
+		ret.SetStatus(models.St400BadRequest, err.Error(), 0)
+		c.Data["json"] = &ret
+		c.ServeJSON()
+	}
+
+	var addr string
+	err = c.Ctx.Input.Bind(&addr, "addr")
+	if err != nil {
+		ret.SetStatus(models.St400BadRequest, err.Error(), 0)
+		c.Data["json"] = &ret
+		c.ServeJSON()
+	}
+	if len(addr) <= 0 {
+		ret.SetStatus(models.St400BadRequest, "no photo address", 0)
+		c.Data["json"] = &ret
+		c.ServeJSON()
+	}
+	log.Println("SetSnapURL idx", idx)
+	//Encode addr
+	err = models.SetSnapURLByIndex(idx, addr)
 	if err != nil {
 		ret.SetStatus(models.St409Conflict, err.Error(), 0)
 		c.Data["json"] = &ret

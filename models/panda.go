@@ -146,3 +146,14 @@ func SetURLByIndex(index int, url string) error {
 	}
 	return nil
 }
+
+/*SetSnapURLByIndex set the new name for the owner*/
+func SetSnapURLByIndex(index int, url string) error {
+	SQLConnect()
+	//只執行一次不做 prepare
+	_, err := sqldb.Exec(`UPDATE panda SET snapurl=? WHERE pandaIndex=?`, url, index)
+	if err != nil {
+		return err
+	}
+	return nil
+}
