@@ -196,7 +196,7 @@ paths:
         404:
           $ref: '#/responses/NotFound'
   /panda/{idx}/snap:
-    x-summary: Update Panda Photo Address
+    x-summary: Update Panda Snapshot Address
     put:
       tags: 
       - "Panda"
