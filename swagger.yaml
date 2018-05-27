@@ -7,6 +7,7 @@ info:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
 host: "dev.polypanda.io:10443"
+
 basePath: /api/v1
 tags:
 - name: "General"
@@ -51,7 +52,7 @@ paths:
         It is better to use page parameter to get Panda list。 
         
       parameters:
-        - name: pageNum
+        - name: page
           in: query
           description: page of Pandas to return
           type: integer
